@@ -37,6 +37,8 @@ These examples use [sqlite](https://central.sonatype.com/artifact/org.xerial/sql
 
 ### Select rows by id
 
+Any variables injected into the template will be replaced with `?`s in the
+SQL and will be set with `.setObject` on the returned `PreparedStatement`.
 
 ```java
 import dev.mccue.jdbc.StatementPreparer;
@@ -86,7 +88,7 @@ void main() throws Exception {
 ### Inject parameters with custom logic
 
 To inject a parameter that needs to be set with something other than `setObject`,
-you can make an instance of `SettableParameter`
+you can make an instance of `SettableParameter`.
 
 ```java
 import dev.mccue.jdbc.SettableParameter;
