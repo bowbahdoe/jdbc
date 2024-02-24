@@ -84,7 +84,7 @@ public class JdbcTest {
             try (var stmt = StatementPreparer.of(conn)."""
                    SELECT * FROM widget
                    WHERE name IN \{names}
-                   ORDER BY name DESC
+                   ORDER BY name ASC
                    """) {
                 var rs = stmt.executeQuery();
                 assertTrue(rs.next(), "Get first row");
@@ -98,7 +98,7 @@ public class JdbcTest {
             try (var stmt = StatementPreparer.of(conn)."""
                    SELECT * FROM widget
                    WHERE name IN \{names} AND id = \{id}
-                   ORDER BY name DESC
+                   ORDER BY name ASC
                    """) {
                 var rs = stmt.executeQuery();
                 assertTrue(rs.next(), "Get first row");
