@@ -17,7 +17,7 @@ Expect to have to upgrade.
 <dependency>
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>0.0.1-alpha1</version>
+    <version>0.0.1-alpha2</version>
 </dependency>
 ```
 
