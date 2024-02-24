@@ -197,6 +197,8 @@ public final class StatementPreparer
                 }
             }
 
+            strings.append(fragments.getLast());
+
             var preparedStatement = maker.make(strings.toString());
 
             for (int i = 0; i < params.size(); i++) {

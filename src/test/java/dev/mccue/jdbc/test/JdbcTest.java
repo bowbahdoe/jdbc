@@ -138,4 +138,37 @@ public class JdbcTest {
             }
         }
     }
+
+
+    @Test
+    public void testProperSubstitution() throws Exception {
+        var path = Files.createTempFile("test", "db");
+        var db = new SQLiteDataSource();
+        db.setUrl(STR."jdbc:sqlite:\{path}");
+
+        int x = 4;
+        List<String> s = List.of("bob", "susan", "peter");
+        SettableParameter o = SettableParameter.ofFloat(4.5f);
+
+        try (var conn = db.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                    CREATE TABLE widget (
+                        id integer primary key,
+                        name text not null,
+                        value REAL
+                    )
+                    """)) {
+                stmt.execute();
+            }
+
+            // Needs to include last fragment for this test to pass
+            try (var stmt = StatementPreparer.of(conn)."""
+                    SELECT * FROM widget WHERE name IN \{s} OR id = \{x} OR value = \{o} OR id = 'b'
+                    """) {
+                System.out.println(stmt);
+                assertTrue(stmt.toString().startsWith("SELECT * FROM widget WHERE name IN (?,?,?) OR id = ? OR value = ? OR id = 'b'"));
+                assertTrue(stmt.toString().endsWith("[bob, susan, peter, 4, 4.5]"));
+            }
+        }
+    }
 }
