@@ -12,6 +12,7 @@ import java.util.Calendar;
  * An object which knows how to set itself as a parameter on a {@link PreparedStatement}.
  * This design comes from <a href="https://github.com/seancorfield/next-jdbc">https://github.com/seancorfield/next-jdbc</a>.
  */
+@FunctionalInterface
 public interface SettableParameter {
     void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException;
 
@@ -438,7 +439,7 @@ public interface SettableParameter {
     }
 
     /**
-     * @see PreparedStatement#setBlob(int, Blob)
+     * @see PreparedStatement#setRowId(int, RowId)
      * @param rowId The value to set.
      * @return A {@link SettableParameter}.
      */

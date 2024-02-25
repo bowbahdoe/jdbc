@@ -1,7 +1,11 @@
 # JDBC
 
-Utilities for working with the raw JDBC api. Notably a template processor
-for making prepared statements.
+Utilities for working with the raw JDBC api. 
+
+Includes
+
+* A template processor for making prepared statements.
+* Utilities for reading data from `ResultSet`s
 
 **NOTE:** Template processors are currently a preview feature,
 and as such releases of this library are tied to a specific
@@ -17,7 +21,7 @@ Expect to have to upgrade.
 <dependency>
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>0.0.1-alpha2</version>
+    <version>0.0.1-alpha3</version>
 </dependency>
 ```
 
@@ -26,7 +30,7 @@ Expect to have to upgrade.
 
 ```groovy
 dependencies {
-    implementation("dev.mccue:jdbc:0.0.2-alpha2")
+    implementation("dev.mccue:jdbc:0.0.2-alpha3")
 }
 ```
 
@@ -106,6 +110,63 @@ void main() throws Exception {
                 WHERE name = \{SettableParameter.ofNString(name)}
                 """){
             var rs = stmt.executeQuery();
+        }
+    }
+}
+```
+
+### Read nullable primitive types
+
+`ResultSets` includes helpers for reading potentially null
+primitive types from a `ResultSet`
+
+```java
+import dev.mccue.jdbc.ResultSets;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    var name = "bob";
+    try (var conn = db.getConnection()) {
+        try (var stmt = conn.prepareStatement("""
+                SELECT number
+                FROM widget
+                LIMIT 1
+                """)) {
+            var rs = stmt.executeQuery();
+
+            // Methods exist for all 8 primitives
+            var number = ResultSets.getIntegerNullable(rs, "number");
+        }
+    }
+}
+```
+
+### Read non-null primitive types
+
+If you want to read a column that is primitive, but you assume
+is not null, there are helpers which will throw a `SQLException`
+early if that assumption is violated.
+
+```java
+import dev.mccue.jdbc.ResultSets;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    var name = "bob";
+    try (var conn = db.getConnection()) {
+        try (var stmt = conn.prepareStatement("""
+                SELECT number
+                FROM widget
+                LIMIT 1
+                """)) {
+            var rs = stmt.executeQuery();
+
+            // Methods exist for all 8 primitives
+            var number = ResultSets.getIntegerNotNull(rs, "number");
         }
     }
 }

@@ -165,7 +165,6 @@ public class JdbcTest {
             try (var stmt = StatementPreparer.of(conn)."""
                     SELECT * FROM widget WHERE name IN \{s} OR id = \{x} OR value = \{o} OR id = 'b'
                     """) {
-                System.out.println(stmt);
                 assertTrue(stmt.toString().startsWith("SELECT * FROM widget WHERE name IN (?,?,?) OR id = ? OR value = ? OR id = 'b'"));
                 assertTrue(stmt.toString().endsWith("[bob, susan, peter, 4, 4.5]"));
             }
