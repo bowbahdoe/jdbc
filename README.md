@@ -136,7 +136,8 @@ void main() throws Exception {
                 """)) {
             var rs = stmt.executeQuery();
 
-            // Methods exist for all 8 primitives
+            // Methods exist for all primitives except char 
+            // (which doesn't have a method on ResultSet)
             var number = ResultSets.getIntegerNullable(rs, "number");
         }
     }
@@ -165,7 +166,8 @@ void main() throws Exception {
                 """)) {
             var rs = stmt.executeQuery();
 
-            // Methods exist for all 8 primitives
+            // Methods exist for all primitives except char 
+            // (which doesn't have a method on ResultSet)
             var number = ResultSets.getIntegerNotNull(rs, "number");
         }
     }

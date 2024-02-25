@@ -436,7 +436,7 @@ public final class ResultSets {
     public static double getDoubleNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getDouble(index);
         if (rs.wasNull()) {
-            throw new SQLException("Column " + index + " was null");
+            throw new SQLException(STR."Column \{index} was null");
         }
         return value;
     }
@@ -453,7 +453,7 @@ public final class ResultSets {
     public static double getDoubleNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getDouble(columnName);
         if (rs.wasNull()) {
-            throw new SQLException("Column " + columnName + " was null");
+            throw new SQLException(STR."Column \{columnName} was null");
         }
         return value;
     }
