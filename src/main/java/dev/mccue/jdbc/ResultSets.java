@@ -77,7 +77,11 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Boolean getBooleanNullable(ResultSet rs, String columnName) throws SQLException {
-        return getBooleanNullable(rs, rs.findColumn(columnName));
+        var value = rs.getBoolean(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 
     /**
@@ -141,7 +145,11 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Byte getByteNullable(ResultSet rs, String columnName) throws SQLException {
-        return getByteNullable(rs, rs.findColumn(columnName));
+        var value = rs.getByte(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 
     /**
@@ -205,7 +213,11 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Short getShortNullable(ResultSet rs, String columnName) throws SQLException {
-        return getShortNullable(rs, rs.findColumn(columnName));
+        var value = rs.getShort(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 
     /**
@@ -269,7 +281,11 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Integer getIntegerNullable(ResultSet rs, String columnName) throws SQLException {
-        return getIntegerNullable(rs, rs.findColumn(columnName));
+        var value = rs.getInt(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 
     /**
@@ -333,7 +349,11 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Long getLongNullable(ResultSet rs, String columnName) throws SQLException {
-        return getLongNullable(rs, rs.findColumn(columnName));
+        var value = rs.getLong(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 
     /**
@@ -397,7 +417,11 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Float getFloatNullable(ResultSet rs, String columnName) throws SQLException {
-        return getFloatNullable(rs, rs.findColumn(columnName));
+        var value = rs.getFloat(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 
     /**
@@ -461,6 +485,10 @@ public final class ResultSets {
      * @throws SQLException If the driver throws an exception.
      */
     public static Double getDoubleNullable(ResultSet rs, String columnName) throws SQLException {
-        return getDoubleNullable(rs, rs.findColumn(columnName));
+        var value = rs.getDouble(columnName);
+        if (rs.wasNull()) {
+            return null;
+        }
+        return value;
     }
 }
