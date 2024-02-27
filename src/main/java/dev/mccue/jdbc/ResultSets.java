@@ -474,21 +474,4 @@ public final class ResultSets {
         }
         return value;
     }
-
-    /**
-     * Gets a double value from a {@link ResultSet}, returning null
-     * if the column is null.
-     *
-     * @param rs The {@link ResultSet}
-     * @param columnName The column to get.
-     * @return A double value
-     * @throws SQLException If the driver throws an exception.
-     */
-    public static Double getDoubleNullable(ResultSet rs, String columnName) throws SQLException {
-        var value = rs.getDouble(columnName);
-        if (rs.wasNull()) {
-            return null;
-        }
-        return value;
-    }
 }
