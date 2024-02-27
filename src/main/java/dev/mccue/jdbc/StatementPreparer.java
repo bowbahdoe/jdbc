@@ -164,7 +164,7 @@ public final class StatementPreparer
         var params = new ArrayList<SettableParameter>();
         var strings = new StringBuilder();
 
-        for (int i = 0; i < valuesSize; i++) {
+        for (int i = 0; i < valuesSize; ++i) {
             strings.append(fragments.get(i));
             var value = values.get(i);
             switch (value) {
