@@ -229,6 +229,7 @@ void main() throws Exception {
 }
 ```
 
+<!--
 ### Read a row as a `Record`, customizing how a column is gotten from a `ResultSet`.
 
 ```java
@@ -290,3 +291,5 @@ void main() throws Exception {
     }
 }
 ```
+
+-->
