@@ -1,7 +1,6 @@
 package dev.mccue.jdbc.test;
 
 import dev.mccue.jdbc.Column;
-import dev.mccue.jdbc.DefaultRecordComponentGetter;
 import dev.mccue.jdbc.ResultSets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -381,6 +380,7 @@ public class ResultSetsTest {
         }
     }
 
+    /*
     public record Text(String contents) {
     }
 
@@ -430,6 +430,7 @@ public class ResultSetsTest {
             }
         }
     }
+     */
 
 
 

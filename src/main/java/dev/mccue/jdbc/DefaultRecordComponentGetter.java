@@ -4,7 +4,7 @@ import java.lang.reflect.RecordComponent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
+class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
     static final RecordComponentGetter<Object> INSTANCE
             = new DefaultRecordComponentGetter();
 

@@ -37,12 +37,4 @@ public @interface Column {
      * </p>
      */
     String label() default "";
-
-    /**
-     * The {@link RecordComponentGetter} to use for getting the
-     * column's value out from a {@link java.sql.ResultSet}.
-     * @return A {@link RecordComponentGetter}
-     */
-    Class<? extends RecordComponentGetter<?>> recordComponentGetter()
-            default DefaultRecordComponentGetter.class;
 }

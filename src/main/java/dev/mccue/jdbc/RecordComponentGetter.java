@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * @param <T> The type of value returned.
  */
 @FunctionalInterface
-public interface RecordComponentGetter<T> {
+interface RecordComponentGetter<T> {
     /**
      * Extracts and a value from the given {@link ResultSet}
      * for the {@link RecordComponent}.

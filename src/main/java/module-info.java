@@ -3,7 +3,7 @@
  */
 module dev.mccue.jdbc {
     requires static org.jetbrains.annotations;
-    requires java.sql;
+    requires transitive java.sql;
 
     exports dev.mccue.jdbc;
 }

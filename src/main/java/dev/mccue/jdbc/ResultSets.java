@@ -562,24 +562,8 @@ public final class ResultSets {
 
             for (int i = 0; i < o.length; i++) {
                 var component = components[i];
-                var mapperClass = Optional.ofNullable(component.getAnnotation(Column.class))
-                        .map(Column::recordComponentGetter)
-                        .orElse(null);
-
-                RecordComponentGetter<?> mapper;
-                if (mapperClass != null) {
-                    var mapperConstructor = lookup
-                            .findConstructor(mapperClass, MethodType.methodType(void.class));
-                    try {
-                        mapper = (RecordComponentGetter<?>) mapperConstructor.invoke();
-                    } catch (Throwable t) {
-                        throw new SQLException(t);
-                    }
-                }
-                else {
-                    mapper = DefaultRecordComponentGetter.INSTANCE;
-                }
-
+                RecordComponentGetter<?> mapper
+                        = DefaultRecordComponentGetter.INSTANCE;;
                 o[i] = mapper.getRecordComponent(rs, component);
             }
 
