@@ -245,12 +245,20 @@ public record Text(String contents) {}
 public static final class CustomRecordComponentGetter 
         extends DefaultRecordComponentGetter {
     @Override
-    protected Object getIndexedRecordComponent(ResultSet rs, RecordComponent recordComponent, int index) throws SQLException {
+    protected Object getIndexedRecordComponent(
+            ResultSet rs, 
+            RecordComponent recordComponent, 
+            int index
+    ) throws SQLException {
         return new Text(rs.getString(index));
     }
 
     @Override
-    protected Object getLabeledRecordComponent(ResultSet rs, RecordComponent recordComponent, String label) throws SQLException {
+    protected Object getLabeledRecordComponent(
+            ResultSet rs, 
+            RecordComponent recordComponent, 
+            String label
+    ) throws SQLException {
         return new Text(rs.getString(label));
     }
 }
