@@ -1,11 +1,15 @@
 package dev.mccue.jdbc.test;
 
+import dev.mccue.jdbc.Column;
+import dev.mccue.jdbc.DefaultRecordComponentGetter;
 import dev.mccue.jdbc.ResultSets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sqlite.SQLiteDataSource;
 
+import java.lang.reflect.RecordComponent;
 import java.nio.file.Files;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,7 +21,7 @@ public class ResultSetsTest {
     public void setUp() throws Exception {
         var path = Files.createTempFile("test", "db");
         var db = new SQLiteDataSource();
-        db.setUrl(STR."jdbc:sqlite:\{path}");
+        db.setUrl("jdbc:sqlite:" + path);
         try (var conn = db.getConnection()) {
             try (var stmt = conn.prepareStatement("""
                     CREATE TABLE widget (
@@ -334,5 +338,99 @@ public class ResultSetsTest {
             }
         }
     }
+
+    public record GetRecordTestResult(
+            @Column(label = "number") Integer n,
+            String name
+    ) {}
+
+    @Test
+    public void getRecordTest() throws Exception {
+        try (var conn = db.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                        SELECT number, name
+                        FROM widget
+                        WHERE name = 'a' OR name = 'b'
+                        """)) {
+                var rs = stmt.executeQuery();
+                var record = ResultSets.getRecord(rs, GetRecordTestResult.class);
+                assertEquals(record, new GetRecordTestResult(1, "a"));
+            }
+        }
+    }
+
+    public record GetRecordIntTestResult(
+            @Column(label = "number") int n,
+            String name
+    ) {}
+
+
+    @Test
+    public void getRecordIntTest() throws Exception {
+        try (var conn = db.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                        SELECT number, name
+                        FROM widget
+                        WHERE name = 'a' OR name = 'b'
+                        """)) {
+
+                var rs = stmt.executeQuery();
+                var record = ResultSets.getRecord(rs, GetRecordIntTestResult.class);
+                assertEquals(record, new GetRecordIntTestResult(1, "a"));
+            }
+        }
+    }
+
+    public record Text(String contents) {
+    }
+
+    public static final class CustomRecordComponentGetter extends DefaultRecordComponentGetter {
+        @Override
+        protected Object getIndexedRecordComponent(
+                ResultSet rs,
+                RecordComponent recordComponent,
+                int index
+        ) throws SQLException {
+            return new Text(rs.getString(index));
+        }
+
+        @Override
+        protected Object getLabeledRecordComponent(
+                ResultSet rs,
+                RecordComponent recordComponent,
+                String label
+        ) throws SQLException {
+            return new Text(rs.getString(label));
+        }
+    }
+
+    public record Widget(
+            @Column(label = "number")
+            int n,
+            @Column(
+                    recordComponentGetter = CustomRecordComponentGetter.class
+            )
+            Text name
+    ) {
+    }
+
+    @Test
+    public void customMapperTest() throws Exception {
+        try (var conn = db.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                    SELECT number, name
+                    FROM widget
+                    LIMIT 1
+                    """)) {
+                var rs = stmt.executeQuery();
+                var widget = ResultSets.getRecord(rs, Widget.class);
+
+                assertEquals(widget, new Widget(1, new Text("a")));
+                System.out.println(widget);
+            }
+        }
+    }
+
+
 
 }

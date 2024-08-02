@@ -1,16 +1,8 @@
 package dev.mccue.jdbc.test;
 
-import dev.mccue.jdbc.SettableParameter;
-import dev.mccue.jdbc.StatementPreparer;
-import org.junit.jupiter.api.Test;
-import org.sqlite.SQLiteDataSource;
-
-import java.nio.file.Files;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JdbcTest {
+    /*
     @Test
     public void testWhereClause() throws Exception {
         var path = Files.createTempFile("test", "db");
@@ -170,4 +162,5 @@ public class JdbcTest {
             }
         }
     }
+    */
 }

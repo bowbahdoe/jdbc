@@ -15,13 +15,13 @@ import java.util.stream.Stream;
  */
 public final class StatementPreparer
         implements StringTemplate.Processor<PreparedStatement, SQLException> {
-    private interface PreparedStatementMaker {
+    interface PreparedStatementMaker {
         PreparedStatement make(String sql) throws SQLException;
     }
 
     private final PreparedStatementMaker maker;
 
-    private StatementPreparer(PreparedStatementMaker maker) {
+    StatementPreparer(PreparedStatementMaker maker) {
         this.maker = maker;
     }
 

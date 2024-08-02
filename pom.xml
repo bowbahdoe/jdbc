@@ -6,7 +6,7 @@
 
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>0.0.1-alpha3</version>
+    <version>2024.08.02</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -81,9 +81,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
-                <configuration>
-                    <argLine>--enable-preview</argLine>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -100,7 +97,6 @@
                     <target>21</target>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
-                        <arg>--enable-preview</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -126,7 +122,6 @@
                         </executions>
                         <configuration>
                             <release>21</release>
-                            <additionalOptions>--enable-preview</additionalOptions>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -145,9 +140,13 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>1.3.1</version>
+                        <version>1.11.0</version>
                         <configuration>
                             <jreleaser>
+                                <project>
+                                    <copyright>2024</copyright>
+                                    <versionPattern><type>CHRONVER</type></versionPattern>
+                                </project>
                                 <signing>
                                     <active>ALWAYS</active>
                                     <armored>true</armored>

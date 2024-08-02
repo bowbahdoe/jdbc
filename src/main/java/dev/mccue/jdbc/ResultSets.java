@@ -1,7 +1,13 @@
 package dev.mccue.jdbc;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.RecordComponent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Utilities for reading data out of {@link ResultSet}s. Specifically, static methods for reading
@@ -28,7 +34,7 @@ public final class ResultSets {
     public static boolean getBooleanNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getBoolean(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -45,7 +51,7 @@ public final class ResultSets {
     public static boolean getBooleanNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getBoolean(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -96,7 +102,7 @@ public final class ResultSets {
     public static byte getByteNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getByte(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -113,7 +119,7 @@ public final class ResultSets {
     public static byte getByteNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getByte(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -164,7 +170,7 @@ public final class ResultSets {
     public static short getShortNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getShort(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -181,7 +187,7 @@ public final class ResultSets {
     public static short getShortNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getShort(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -232,7 +238,7 @@ public final class ResultSets {
     public static int getIntegerNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getInt(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -249,7 +255,7 @@ public final class ResultSets {
     public static int getIntegerNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getInt(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -300,7 +306,7 @@ public final class ResultSets {
     public static long getLongNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getLong(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -317,7 +323,7 @@ public final class ResultSets {
     public static long getLongNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getLong(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -368,7 +374,7 @@ public final class ResultSets {
     public static float getFloatNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getFloat(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -385,7 +391,7 @@ public final class ResultSets {
     public static float getFloatNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getFloat(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -436,7 +442,7 @@ public final class ResultSets {
     public static double getDoubleNotNull(ResultSet rs, int index) throws SQLException {
         var value = rs.getDouble(index);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{index} was null");
+            throw new SQLException("Column " + index + " was null");
         }
         return value;
     }
@@ -453,7 +459,7 @@ public final class ResultSets {
     public static double getDoubleNotNull(ResultSet rs, String columnName) throws SQLException {
         var value = rs.getDouble(columnName);
         if (rs.wasNull()) {
-            throw new SQLException(STR."Column \{columnName} was null");
+            throw new SQLException("Column " + columnName + " was null");
         }
         return value;
     }
@@ -490,5 +496,101 @@ public final class ResultSets {
             return null;
         }
         return value;
+    }
+
+    /**
+     * Directly maps the current row to a record.
+     *
+     * <p>
+     *     Record component names are used as the names for columns. Record component types
+     *     are given to {@link ResultSet#getObject(String, Class)}.
+     * </p>
+     *
+     * <p>
+     *     If a record component is annotated with {@link Column} then the value
+     *     specified by that annotation will be used for the column name.
+     * </p>
+     *
+     * @param rs The {@link ResultSet}
+     * @param klass The {@link Record} class to map to.
+     * @return An instance of the given record.
+     * @param <T> The type of the {@link Record}.
+     * @throws SQLException If an error occurs.
+     */
+    public static <T extends Record> T getRecord(
+            ResultSet rs,
+            Class<T> klass
+    ) throws SQLException {
+        return getRecord(rs, klass, MethodHandles.publicLookup());
+    }
+
+    /**
+     * Directly maps the current row to a record.
+     *
+     * <p>
+     *     Record component names are used as the names for columns. Record component types
+     *     are given to {@link ResultSet#getObject(String, Class)}.
+     * </p>
+     *
+     * <p>
+     *     If a record component is annotated with {@link Column} then the value
+     *     specified by that annotation will be used for the column name.
+     * </p>
+     *
+     * @param rs The {@link ResultSet}
+     * @param klass The {@link Record} class to map to.
+     * @param lookup A {@link MethodHandles.Lookup} for accessing record constructors and
+     *               instantiating any custom {@link RecordComponentGetter}.
+     * @return An instance of the given record.
+     * @param <T> The type of the {@link Record}.
+     * @throws SQLException If an error occurs.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Record> T getRecord(
+            ResultSet rs,
+            Class<T> klass,
+            MethodHandles.Lookup lookup
+    ) throws SQLException {
+        var components = klass.getRecordComponents();
+        var componentTypes = Arrays.stream(klass.getRecordComponents())
+                .map(RecordComponent::getType)
+                .toArray(Class<?>[]::new);
+        try {
+            var constructor = lookup
+                    .findConstructor(klass, MethodType.methodType(void.class, componentTypes));
+            var o = new Object[components.length];
+
+            for (int i = 0; i < o.length; i++) {
+                var component = components[i];
+                var mapperClass = Optional.ofNullable(component.getAnnotation(Column.class))
+                        .map(Column::recordComponentGetter)
+                        .orElse(null);
+
+                RecordComponentGetter<?> mapper;
+                if (mapperClass != null) {
+                    var mapperConstructor = lookup
+                            .findConstructor(mapperClass, MethodType.methodType(void.class));
+                    try {
+                        mapper = (RecordComponentGetter<?>) mapperConstructor.invoke();
+                    } catch (Throwable t) {
+                        throw new SQLException(t);
+                    }
+                }
+                else {
+                    mapper = DefaultRecordComponentGetter.INSTANCE;
+                }
+
+                o[i] = mapper.getRecordComponent(rs, component);
+            }
+
+            try {
+                return (T) constructor.invokeWithArguments(o);
+            } catch (Throwable t) {
+                throw new SQLException(t);
+            }
+        } catch (NoSuchMethodException
+                 | IllegalAccessException e) {
+            throw new SQLException(e);
+        }
     }
 }
