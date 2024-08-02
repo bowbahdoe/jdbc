@@ -207,7 +207,7 @@ If the name of a record component doesn't line up with what you want pulled from
 import dev.mccue.jdbc.Column;
 import dev.mccue.jdbc.ResultSets;
 
-public record Widget(@Column(label = "number") int  ) {
+public record Widget(@Column(label = "number") int n) {
 }
 
 void main() throws Exception {
@@ -242,7 +242,8 @@ import java.sql.SQLException;
 
 public record Text(String contents) {}
 
-public static final class CustomRecordComponentGetter extends DefaultRecordComponentGetter {
+public static final class CustomRecordComponentGetter 
+        extends DefaultRecordComponentGetter {
     @Override
     protected Object getIndexedRecordComponent(ResultSet rs, RecordComponent recordComponent, int index) throws SQLException {
         return new Text(rs.getString(index));
