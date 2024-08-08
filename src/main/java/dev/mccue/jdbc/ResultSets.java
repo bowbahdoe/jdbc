@@ -6,7 +6,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -525,6 +527,33 @@ public final class ResultSets {
     }
 
     /**
+     * {@link ResultSetGetter} which retrieves a full record as with
+     * {@link ResultSets#getRecord(ResultSet,Class)}
+     * @param klass The record class.
+     * @return A {@link ResultSetGetter}
+     * @param <T> The type of record.
+     */
+    public static <T extends Record> ResultSetGetter<T> getRecord(
+            Class<T> klass
+    ) {
+        return rs -> getRecord(rs, klass);
+    }
+
+    /**
+     * {@link ResultSetGetter} which retrieves a full record as with
+     * {@link ResultSets#getRecord(ResultSet,Class,MethodHandles.Lookup)}
+     * @param klass The record class.
+     * @return A {@link ResultSetGetter}
+     * @param <T> The type of record.
+     */
+    public static <T extends Record> ResultSetGetter<T> getRecord(
+            Class<T> klass,
+            MethodHandles.Lookup lookup
+    ) {
+        return rs -> getRecord(rs, klass, lookup);
+    }
+
+    /**
      * Directly maps the current row to a record.
      *
      * <p>
@@ -579,5 +608,22 @@ public final class ResultSets {
                  | IllegalAccessException e) {
             throw new SQLException(e);
         }
+    }
+
+    /**
+     * Pulls a list of data from a {@link ResultSet}.
+     *
+     * @param rs The {@link ResultSet} to pull from.
+     * @param getter Called to get each item of the list.
+     * @return A list of data.
+     * @param <T> The type of data in the list.
+     * @throws SQLException If something goes wrong.
+     */
+    public static <T> List<T> getList(ResultSet rs, ResultSetGetter<? extends T> getter) throws SQLException {
+        var items = new ArrayList<T>();
+        while (rs.next()) {
+            items.add(getter.get(rs));
+        }
+        return List.copyOf(items);
     }
 }

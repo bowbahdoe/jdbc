@@ -6,10 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sqlite.SQLiteDataSource;
 
-import java.lang.reflect.RecordComponent;
 import java.nio.file.Files;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -376,6 +375,32 @@ public class ResultSetsTest {
                 var rs = stmt.executeQuery();
                 var record = ResultSets.getRecord(rs, GetRecordIntTestResult.class);
                 assertEquals(record, new GetRecordIntTestResult(1, "a"));
+            }
+        }
+    }
+
+    public record GetRecordListTestResult(
+            String name
+    ) {}
+
+    @Test
+    public void getRecordListTest() throws Exception {
+        try (var conn = db.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                        SELECT name
+                        FROM widget
+                        WHERE name = 'a' OR name = 'b'
+                        """)) {
+
+                var rs = stmt.executeQuery();
+                var record = ResultSets.getList(
+                        rs,
+                        ResultSets.getRecord(GetRecordListTestResult.class)
+                );
+                assertEquals(record, List.of(
+                        new GetRecordListTestResult("a"),
+                        new GetRecordListTestResult("b")
+                ));
             }
         }
     }
