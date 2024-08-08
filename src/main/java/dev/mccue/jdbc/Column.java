@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
     /**
-     * When set to a number &gte; 0, will be used as the key
+     * When set to a number greater than or equal to 0, will be used as the key
      * to look up a value in the {@link java.sql.ResultSet}.
      *
      * <p>
