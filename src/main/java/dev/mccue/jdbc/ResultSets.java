@@ -551,6 +551,9 @@ public final class ResultSets {
             Class<T> klass,
             MethodHandles.Lookup lookup
     ) throws SQLException {
+        if (!klass.isRecord()) {
+            throw new IllegalArgumentException("Provided class is not a record: " + klass.getName());
+        }
         var components = klass.getRecordComponents();
         var componentTypes = Arrays.stream(klass.getRecordComponents())
                 .map(RecordComponent::getType)
