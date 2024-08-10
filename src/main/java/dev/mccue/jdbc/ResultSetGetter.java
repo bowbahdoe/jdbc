@@ -10,7 +10,7 @@ import java.sql.SQLException;
 @FunctionalInterface
 public interface ResultSetGetter<T> {
     /**
-     * Extract information from a record component.
+     * Extract information from a result set.
      * @param rs The result set to extract from.
      * @return The extracted data.
      */

@@ -6,10 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Utilities for reading data out of {@link ResultSet}s. Specifically, static methods for reading
@@ -523,7 +520,7 @@ public final class ResultSets {
             ResultSet rs,
             Class<T> klass
     ) throws SQLException {
-        return getRecord(rs, klass, MethodHandles.publicLookup());
+        return getRecord(klass).get(rs);
     }
 
     /**
@@ -536,7 +533,7 @@ public final class ResultSets {
     public static <T extends Record> ResultSetGetter<T> getRecord(
             Class<T> klass
     ) {
-        return rs -> getRecord(rs, klass);
+        return getRecord(klass, MethodHandles.publicLookup());
     }
 
     /**
@@ -546,11 +543,41 @@ public final class ResultSets {
      * @return A {@link ResultSetGetter}
      * @param <T> The type of record.
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Record> ResultSetGetter<T> getRecord(
             Class<T> klass,
             MethodHandles.Lookup lookup
     ) {
-        return rs -> getRecord(rs, klass, lookup);
+        if (!klass.isRecord()) {
+            throw new IllegalArgumentException("Provided class is not a record: " + klass.getName());
+        }
+        var components = klass.getRecordComponents();
+        var componentTypes = Arrays.stream(klass.getRecordComponents())
+                .map(RecordComponent::getType)
+                .toArray(Class<?>[]::new);
+        try {
+            var constructor = lookup
+                    .findConstructor(klass, MethodType.methodType(void.class, componentTypes));
+            return rs -> {
+                var o = new Object[components.length];
+
+                for (int i = 0; i < o.length; i++) {
+                    var component = components[i];
+                    RecordComponentGetter<?> mapper
+                            = DefaultRecordComponentGetter.INSTANCE;;
+                    o[i] = mapper.getRecordComponent(rs, component);
+                }
+
+                try {
+                    return (T) constructor.invokeWithArguments(o);
+                } catch (Throwable t) {
+                    throw new SQLException(t);
+                }
+            };
+        } catch (NoSuchMethodException
+                 | IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
@@ -574,40 +601,12 @@ public final class ResultSets {
      * @param <T> The type of the {@link Record}.
      * @throws SQLException If an error occurs.
      */
-    @SuppressWarnings("unchecked")
     public static <T extends Record> T getRecord(
             ResultSet rs,
             Class<T> klass,
             MethodHandles.Lookup lookup
     ) throws SQLException {
-        if (!klass.isRecord()) {
-            throw new IllegalArgumentException("Provided class is not a record: " + klass.getName());
-        }
-        var components = klass.getRecordComponents();
-        var componentTypes = Arrays.stream(klass.getRecordComponents())
-                .map(RecordComponent::getType)
-                .toArray(Class<?>[]::new);
-        try {
-            var constructor = lookup
-                    .findConstructor(klass, MethodType.methodType(void.class, componentTypes));
-            var o = new Object[components.length];
-
-            for (int i = 0; i < o.length; i++) {
-                var component = components[i];
-                RecordComponentGetter<?> mapper
-                        = DefaultRecordComponentGetter.INSTANCE;;
-                o[i] = mapper.getRecordComponent(rs, component);
-            }
-
-            try {
-                return (T) constructor.invokeWithArguments(o);
-            } catch (Throwable t) {
-                throw new SQLException(t);
-            }
-        } catch (NoSuchMethodException
-                 | IllegalAccessException e) {
-            throw new SQLException(e);
-        }
+        return getRecord(klass, lookup).get(rs);
     }
 
     /**
@@ -624,6 +623,6 @@ public final class ResultSets {
         while (rs.next()) {
             items.add(getter.get(rs));
         }
-        return List.copyOf(items);
+        return Collections.unmodifiableList(items);
     }
 }
