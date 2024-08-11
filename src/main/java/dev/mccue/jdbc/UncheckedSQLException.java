@@ -34,6 +34,6 @@ public class UncheckedSQLException extends RuntimeException {
         s.defaultReadObject();
         Throwable cause = super.getCause();
         if (!(cause instanceof SQLException))
-            throw new InvalidObjectException("Cause must be an IOException");
+            throw new InvalidObjectException("Cause must be an SQLException");
     }
 }
