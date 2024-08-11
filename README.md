@@ -5,6 +5,7 @@ Utilities for working with the raw JDBC api.
 Includes
 
 * Utilities for reading data from `ResultSet`s
+* An `UncheckedSQLException` for when throwing a `SQLException` is inconvenient, but might need to be recovered later.
 * A `SettableParameter` interface, for when String Templates are re-previewed.
 
 ## Dependency Information
