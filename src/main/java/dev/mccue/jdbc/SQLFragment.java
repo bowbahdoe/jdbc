@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ public final class SQLFragment {
 
     private SQLFragment(String sql, List<?> parameters) {
         this.sql = sql;
-        this.parameters = List.copyOf(parameters);
+        this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters));
     }
 
     public static SQLFragment of(String sql, List<?> parameters) {
@@ -24,7 +26,7 @@ public final class SQLFragment {
     }
 
     public static SQLFragment of(String sql) {
-        return new SQLFragment(sql, List.of());
+        return new SQLFragment(sql, Collections.unmodifiableList(new ArrayList<>()));
     }
 
     public String sql() {
@@ -56,6 +58,22 @@ public final class SQLFragment {
         var params = new ArrayList<>(parameters);
         params.addAll(other.parameters);
         return SQLFragment.of(sql + other.sql, params);
+    }
+
+    public static SQLFragment join(String separator, Collection<SQLFragment> fragments) {
+        var params = new ArrayList<>();
+        var fragmentStr = new StringBuilder();
+
+        var iter = fragments.iterator();
+        while (iter.hasNext()) {
+            var fragment = iter.next();
+            params.addAll(fragment.parameters);
+            fragmentStr.append(fragment.sql);
+            if (iter.hasNext()) {
+                fragmentStr.append(separator);
+            }
+        }
+        return SQLFragment.of(fragmentStr.toString(), params);
     }
 
     public PreparedStatement prepareStatement(Connection connection) throws SQLException {
