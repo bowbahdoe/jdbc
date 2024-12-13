@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +24,11 @@ public final class SQLFragment {
 
     public static SQLFragment of(String sql, List<?> parameters) {
         return new SQLFragment(sql, parameters);
+    }
+
+    public static SQLFragment of(String sql, Object... parameters) {
+
+      return of(sql, Arrays.asList(parameters));
     }
 
     public static SQLFragment of(String sql) {
