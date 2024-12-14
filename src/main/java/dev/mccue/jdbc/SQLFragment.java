@@ -22,11 +22,27 @@ public final class SQLFragment {
         this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters));
     }
 
+    /**
+     *
+     * Create a new SQLFragment with the given list of parameters.
+     *
+     * @param sql the sql fragment
+     * @param parameters the parameters that bind to the sql
+     */
     public static SQLFragment of(String sql, List<?> parameters) {
         return new SQLFragment(sql, parameters);
     }
 
-    public static SQLFragment of(String sql, Object... parameters) {
+    /**
+     *
+     * Create a new SQLFragment with the given vararg parameters.
+     *
+     * @implNote This should NOT be used for array parameters
+     *
+     * @param sql the sql fragment
+     * @param parameters the parameters that bind to the sql
+     */
+    public static SQLFragment ofParams(String sql, Object... parameters) {
 
       return of(sql, Arrays.asList(parameters));
     }
