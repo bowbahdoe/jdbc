@@ -37,7 +37,7 @@ public final class SQLFragment {
      *
      * Create a new SQLFragment with the given vararg parameters.
      *
-     * @implNote This should NOT be used for array parameters
+     * @implNote Use {@link #of(String, List)} for array parameters
      *
      * @param sql the sql fragment
      * @param parameters the parameters that bind to the sql
