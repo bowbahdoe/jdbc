@@ -61,6 +61,27 @@ class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
         else if (type == short.class) {
             return ResultSets.getShortNotNull(rs, index);
         }
+        else if (type == Integer.class) {
+            return ResultSets.getIntegerNullable(rs, index);
+        }
+        else if (type == Long.class) {
+            return ResultSets.getLongNullable(rs, index);
+        }
+        else if (type == Boolean.class) {
+            return ResultSets.getBooleanNullable(rs, index);
+        }
+        else if (type == Double.class) {
+            return ResultSets.getDoubleNullable(rs, index);
+        }
+        else if (type == Float.class) {
+            return ResultSets.getFloatNullable(rs, index);
+        }
+        else if (type == Byte.class) {
+            return ResultSets.getByteNullable(rs, index);
+        }
+        else if (type == Short.class) {
+            return ResultSets.getShortNullable(rs, index);
+        }
         else { // char.class - unclear how best to handle.
             return rs.getObject(index, recordComponent.getType());
         }
@@ -96,6 +117,27 @@ class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
         }
         else if (type == short.class) {
             return ResultSets.getShortNotNull(rs, label);
+        }
+        else if (type == Integer.class) {
+            return ResultSets.getIntegerNullable(rs, label);
+        }
+        else if (type == Long.class) {
+            return ResultSets.getLongNullable(rs, label);
+        }
+        else if (type == Boolean.class) {
+            return ResultSets.getBooleanNullable(rs, label);
+        }
+        else if (type == Double.class) {
+            return ResultSets.getDoubleNullable(rs, label);
+        }
+        else if (type == Float.class) {
+            return ResultSets.getFloatNullable(rs, label);
+        }
+        else if (type == Byte.class) {
+            return ResultSets.getByteNullable(rs, label);
+        }
+        else if (type == Short.class) {
+            return ResultSets.getShortNullable(rs, label);
         }
         else { // char.class - unclear how best to handle.
             return rs.getObject(label, recordComponent.getType());
