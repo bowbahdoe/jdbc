@@ -27,6 +27,13 @@ public class UncheckedSQLException extends RuntimeException {
         return (SQLException) super.getCause();
     }
 
+    @Override
+    public Throwable initCause(Throwable cause) {
+        if (!(cause instanceof SQLException))
+            throw new IllegalArgumentException("Cause must be an SQLException");
+        return super.initCause(cause);
+    }
+
     @Serial
     private void readObject(ObjectInputStream s)
             throws IOException, ClassNotFoundException
