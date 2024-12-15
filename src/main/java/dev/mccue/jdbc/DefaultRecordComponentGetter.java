@@ -38,7 +38,30 @@ class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
     protected Object getIndexedRecordComponent(ResultSet rs, RecordComponent recordComponent, int index) throws SQLException {
         var type = recordComponent.getType();
         if (!type.isPrimitive()) {
-            return rs.getObject(index, recordComponent.getType());
+            if (type == Integer.class) {
+                return ResultSets.getIntegerNullable(rs, index);
+            }
+            else if (type == Long.class) {
+                return ResultSets.getLongNullable(rs, index);
+            }
+            else if (type == Boolean.class) {
+                return ResultSets.getBooleanNullable(rs, index);
+            }
+            else if (type == Double.class) {
+                return ResultSets.getDoubleNullable(rs, index);
+            }
+            else if (type == Float.class) {
+                return ResultSets.getFloatNullable(rs, index);
+            }
+            else if (type == Byte.class) {
+                return ResultSets.getByteNullable(rs, index);
+            }
+            else if (type == Short.class) {
+                return ResultSets.getShortNullable(rs, index);
+            }
+            else {
+                return rs.getObject(index, recordComponent.getType());
+            }
         }
         else if (type == int.class) {
             return ResultSets.getIntegerNotNull(rs, index);
@@ -61,27 +84,6 @@ class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
         else if (type == short.class) {
             return ResultSets.getShortNotNull(rs, index);
         }
-        else if (type == Integer.class) {
-            return ResultSets.getIntegerNullable(rs, index);
-        }
-        else if (type == Long.class) {
-            return ResultSets.getLongNullable(rs, index);
-        }
-        else if (type == Boolean.class) {
-            return ResultSets.getBooleanNullable(rs, index);
-        }
-        else if (type == Double.class) {
-            return ResultSets.getDoubleNullable(rs, index);
-        }
-        else if (type == Float.class) {
-            return ResultSets.getFloatNullable(rs, index);
-        }
-        else if (type == Byte.class) {
-            return ResultSets.getByteNullable(rs, index);
-        }
-        else if (type == Short.class) {
-            return ResultSets.getShortNullable(rs, index);
-        }
         else { // char.class - unclear how best to handle.
             return rs.getObject(index, recordComponent.getType());
         }
@@ -95,7 +97,30 @@ class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
 
         var type = recordComponent.getType();
         if (!type.isPrimitive()) {
-            return rs.getObject(label, recordComponent.getType());
+            if (type == Integer.class) {
+                return ResultSets.getIntegerNullable(rs, label);
+            }
+            else if (type == Long.class) {
+                return ResultSets.getLongNullable(rs, label);
+            }
+            else if (type == Boolean.class) {
+                return ResultSets.getBooleanNullable(rs, label);
+            }
+            else if (type == Double.class) {
+                return ResultSets.getDoubleNullable(rs, label);
+            }
+            else if (type == Float.class) {
+                return ResultSets.getFloatNullable(rs, label);
+            }
+            else if (type == Byte.class) {
+                return ResultSets.getByteNullable(rs, label);
+            }
+            else if (type == Short.class) {
+                return ResultSets.getShortNullable(rs, label);
+            }
+            else {
+                return rs.getObject(label, recordComponent.getType());
+            }
         }
         else if (type == int.class) {
             return ResultSets.getIntegerNotNull(rs, label);
@@ -117,27 +142,6 @@ class DefaultRecordComponentGetter implements RecordComponentGetter<Object> {
         }
         else if (type == short.class) {
             return ResultSets.getShortNotNull(rs, label);
-        }
-        else if (type == Integer.class) {
-            return ResultSets.getIntegerNullable(rs, label);
-        }
-        else if (type == Long.class) {
-            return ResultSets.getLongNullable(rs, label);
-        }
-        else if (type == Boolean.class) {
-            return ResultSets.getBooleanNullable(rs, label);
-        }
-        else if (type == Double.class) {
-            return ResultSets.getDoubleNullable(rs, label);
-        }
-        else if (type == Float.class) {
-            return ResultSets.getFloatNullable(rs, label);
-        }
-        else if (type == Byte.class) {
-            return ResultSets.getByteNullable(rs, label);
-        }
-        else if (type == Short.class) {
-            return ResultSets.getShortNullable(rs, label);
         }
         else { // char.class - unclear how best to handle.
             return rs.getObject(label, recordComponent.getType());
