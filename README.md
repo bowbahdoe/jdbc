@@ -16,7 +16,7 @@ Includes
 <dependency>
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>2024.12.15</version>
+    <version>2024.12.20</version>
 </dependency>
 ```
 
@@ -25,7 +25,7 @@ Includes
 
 ```groovy
 dependencies {
-    implementation("dev.mccue:jdbc:2024.12.15")
+    implementation("dev.mccue:jdbc:2024.12.20")
 }
 ```
 
