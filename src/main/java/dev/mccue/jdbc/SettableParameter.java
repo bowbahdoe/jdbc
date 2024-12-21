@@ -18,7 +18,7 @@ public interface SettableParameter {
 
     /**
      * Utility for creating a {@link SettableParameter} as the target of a lambda expression.
-     * Works an identity function otherwise.
+     * Works as an identity function otherwise.
      *
      * @param settableParameter The {@link SettableParameter} to return.
      * @return The given {@link SettableParameter}.
