@@ -6,6 +6,9 @@ import java.lang.reflect.RecordComponent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Utilities for reading data out of {@link ResultSet}s. Specifically, static methods for reading
@@ -623,5 +626,57 @@ public final class ResultSets {
             items.add(getter.get(rs));
         }
         return Collections.unmodifiableList(items);
+    }
+
+    /**
+     * Pulls a stream of data from a {@link ResultSet}.
+     *
+     * <p>
+     *     Assumes exclusive use of the {@link ResultSet} once passed.
+     *     The stream should be considered invalidated if the underlying {@link ResultSet}
+     *     or {@link java.sql.Connection} are closed.
+     * </p>
+     *
+     * <p>
+     * Any {@link SQLException}s will be wrapped as {@link UncheckedSQLException}s if they
+     * occur during stream operations.
+     * </p>
+     *
+     * @param rs The {@link ResultSet} to pull from.
+     * @param getter Called to get each item of the stream.
+     * @return A stream of data.
+     * @param <T> The type of data in the stream.
+     */
+    public static <T> Stream<T> getStream(ResultSet rs, ResultSetGetter<? extends T> getter) {
+        var iterator = new Iterator<T>() {
+            Boolean hasNext = null;
+            @Override
+            public boolean hasNext() {
+                try {
+                    if (hasNext == null) {
+                        hasNext = rs.next();
+                    }
+                    return hasNext;
+                } catch (SQLException e) {
+                    throw new UncheckedSQLException(e);
+                }
+            }
+
+            @Override
+            public T next() {
+                try {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
+                    var result = getter.get(rs);
+                    hasNext = null;
+                    return result;
+                } catch (SQLException e) {
+                    throw new UncheckedSQLException(e);
+                }
+            }
+        };
+        var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
+        return StreamSupport.stream(spliterator, false);
     }
 }

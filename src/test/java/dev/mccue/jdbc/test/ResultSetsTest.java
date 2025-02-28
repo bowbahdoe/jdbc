@@ -405,6 +405,42 @@ public class ResultSetsTest {
         }
     }
 
+    @Test
+    public void getRecordStreamTest() throws Exception {
+        try (var conn = db.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                        SELECT name
+                        FROM widget
+                        WHERE name = 'a' OR name = 'b'
+                        """)) {
+
+                var rs = stmt.executeQuery();
+                var record = ResultSets.getStream(
+                        rs,
+                        ResultSets.getRecord(GetRecordListTestResult.class)
+                ).toList();
+                assertEquals(record, List.of(
+                        new GetRecordListTestResult("a"),
+                        new GetRecordListTestResult("b")
+                ));
+            }
+
+            try (var stmt = conn.prepareStatement("""
+                        SELECT name
+                        FROM widget
+                        WHERE name = 'not_there'
+                        """)) {
+
+                var rs = stmt.executeQuery();
+                var record = ResultSets.getStream(
+                        rs,
+                        ResultSets.getRecord(GetRecordListTestResult.class)
+                ).toList();
+                assertEquals(record, List.of());
+            }
+        }
+    }
+
     /*
     public record Text(String contents) {
     }
