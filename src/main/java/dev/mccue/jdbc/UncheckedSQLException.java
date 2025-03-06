@@ -10,10 +10,6 @@ public class UncheckedSQLException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = -8134305061645241065L;
 
-    public UncheckedSQLException(String message) {
-        super(message);
-    }
-
     public UncheckedSQLException(String message, SQLException cause) {
         super(message, cause);
     }
