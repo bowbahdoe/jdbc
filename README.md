@@ -167,7 +167,7 @@ void main() throws Exception {
 
             // Methods exist for all primitives except char 
             // (which doesn't have a method on ResultSet)
-            var number = ResultSets.getIntegerNullable(rs, "number");
+            Integer number = ResultSets.getIntegerNullable(rs, "number");
         }
     }
 }
@@ -196,7 +196,7 @@ void main() throws Exception {
 
             // Methods exist for all primitives except char 
             // (which doesn't have a method on ResultSet)
-            var number = ResultSets.getIntegerNotNull(rs, "number");
+            int number = ResultSets.getIntegerNotNull(rs, "number");
         }
     }
 }
@@ -327,7 +327,7 @@ void main() throws Exception {
     try (var conn = db.getConnection()) {
         try (var stmt = query.prepareStatement(conn)) {
             var rs = stmt.executeQuery();
-            var number = ResultSets.getIntegerNullable(rs, "number");
+            Integer number = ResultSets.getIntegerNullable(rs, "number");
             System.out.println(number);
         }
     }
@@ -369,7 +369,7 @@ void main() throws Exception {
     try (var conn = db.getConnection()) {
         try (var stmt = query.prepareStatement(conn)) {
             var rs = stmt.executeQuery();
-            var number = ResultSets.getIntegerNullable(rs, "number");
+            Integer number = ResultSets.getIntegerNullable(rs, "number");
             System.out.println(number);
         }
     }
