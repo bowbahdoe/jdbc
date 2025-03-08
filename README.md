@@ -6,7 +6,8 @@ Includes
 
 * Utilities for reading data from `ResultSet`s
 * An `UncheckedSQLException` for when throwing a `SQLException` is inconvenient, but might need to be recovered later.
-* A `SettableParameter` interface, for when String Templates are re-previewed.
+* A `SQLFragment` class for basic query composition
+* A `SettableParameter` interface, useful with `SQLFragment` (but way more useful whenever String Templates are re-previewed).
 
 ## Dependency Information
 
@@ -113,10 +114,41 @@ void main() throws Exception {
 ```
 -->
 
+### Wrap SQLExceptions
+
+In many contexts the checked-ness of `SQLException` can be inconvenient. Just as the standard library
+provides `UncheckedIOException` to wrap an `IOException`, this library provides an `UncheckedSQLException`
+to wrap `SQLException`.
+
+```java
+import dev.mccue.jdbc.UncheckedSQLException;
+
+import java.sql.SQLException;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    try (var conn = db.getConnection()) {
+        try (var stmt = conn.prepareStatement("""
+                SELECT name
+                FROM widget
+                LIMIT 1
+                """)) {
+            var rs = stmt.executeQuery();
+
+            var name = rs.getString("name");
+        }
+    } catch (SQLException e) {
+        throw new UncheckedSQLException(e);
+    }
+}
+```
+
 ### Read nullable primitive types
 
 `ResultSets` includes helpers for reading potentially null
-primitive types from a `ResultSet`
+primitive types from a `ResultSet`.
 
 ```java
 import dev.mccue.jdbc.ResultSets;
@@ -225,6 +257,120 @@ void main() throws Exception {
             var widget = ResultSets.getRecord(rs, Widget.class);
 
             System.out.println(widget);
+        }
+    }
+}
+```
+
+### Read rows as a stream
+
+If you want to iterate over the results of a query without the classic
+`while (rs.next())` pattern, there is a helper to get the results as a
+stream.
+
+```java
+import dev.mccue.jdbc.Column;
+import dev.mccue.jdbc.ResultSets;
+
+public record Widget(int number) {
+}
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    try (var conn = db.getConnection()) {
+        try (var stmt = conn.prepareStatement("""
+                SELECT number
+                FROM widget
+                LIMIT 1
+                """)) {
+            ResultSets.stream(rs, ResultSets.getRecord(Widget.class))
+                    .forEach(System.out::println);
+        }
+    }
+}
+```
+
+### Compose fragments of SQL
+
+You can use `SQLFragment` to implement some relatively basic conditional query building logic.
+
+
+```java
+import dev.mccue.jdbc.ResultSets;
+import dev.mccue.jdbc.SQLFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    var queryFragments = new ArrayList<SQLFragment>();
+    queryFragments.add(SQLFragment.of("""
+            SELECT name
+            FROM widget
+            WHERE id = ?
+            """, List.of(1)));
+    
+    Integer limit = Math.random() > 0.5 ? null : 1;
+    if (limit != null) {
+        queryFragments.add(SQLFragment.of("""
+                LIMIT ?
+                """, List.of(limit)));
+    }
+    
+    var query = SQLFragment.join("", queryFragments);
+    
+    try (var conn = db.getConnection()) {
+        try (var stmt = query.prepareStatement(conn)) {
+            var rs = stmt.executeQuery();
+            var number = ResultSets.getIntegerNullable(rs, "number");
+            System.out.println(number);
+        }
+    }
+}
+```
+
+By default, parameters are set with `.setObject`. If your particular database driver won't do the right
+thing with that you can wrap them with `SettableParameter`. The different `.ofX` methods on there match up 1-1
+with the `.setX` methods on `PreparedStatement`.
+
+```java
+import dev.mccue.jdbc.ResultSets;
+import dev.mccue.jdbc.SQLFragment;
+import dev.mccue.jdbc.SettableParameter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    var queryFragments = new ArrayList<SQLFragment>();
+    queryFragments.add(SQLFragment.of("""
+            SELECT name
+            FROM widget
+            WHERE id = ?
+            """, List.of(SettableParameter.ofInt(1))));
+
+    Integer limit = Math.random() > 0.5 ? null : 1;
+    if (limit != null) {
+        queryFragments.add(SQLFragment.of("""
+                LIMIT ?
+                """, List.of(SettableParameter.ofInt(limit))));
+    }
+
+    var query = SQLFragment.join("", queryFragments);
+
+    try (var conn = db.getConnection()) {
+        try (var stmt = query.prepareStatement(conn)) {
+            var rs = stmt.executeQuery();
+            var number = ResultSets.getIntegerNullable(rs, "number");
+            System.out.println(number);
         }
     }
 }
