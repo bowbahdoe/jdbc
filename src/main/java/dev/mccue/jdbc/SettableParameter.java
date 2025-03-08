@@ -1,5 +1,7 @@
 package dev.mccue.jdbc;
 
+import org.intellij.lang.annotations.MagicConstant;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -332,7 +334,7 @@ public interface SettableParameter {
      * @param targetSqlType The SQL type code defined in {@code java.sql.Types}.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object, int targetSqlType) {
+    static SettableParameter ofObject(Object object, @MagicConstant(valuesFromClass = Types.class) int targetSqlType) {
         return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object, targetSqlType);
     }
 
@@ -349,7 +351,7 @@ public interface SettableParameter {
      *                this value will be ignored.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object, int targetSqlType, int scaleOrLength) {
+    static SettableParameter ofObject(Object object, @MagicConstant(valuesFromClass = Types.class) int targetSqlType, int scaleOrLength) {
         return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object, targetSqlType, scaleOrLength);
     }
 

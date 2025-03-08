@@ -628,6 +628,23 @@ public final class ResultSets {
     }
 
     /**
+     * Alias for {@link ResultSets#stream(ResultSet, ResultSetGetter)}
+     *
+     * <p>
+     *     Deprecated because of unideal naming.
+     * </p>
+     *
+     * @param rs The {@link ResultSet} to pull from.
+     * @param getter Called to get each item of the stream.
+     * @return A stream of data.
+     * @param <T> The type of data in the stream.
+     */
+    @Deprecated
+    public static <T> Stream<T> getStream(ResultSet rs, ResultSetGetter<? extends T> getter) {
+        return stream(rs, getter);
+    }
+
+    /**
      * Pulls a stream of data from a {@link ResultSet}.
      *
      * <p>
@@ -646,7 +663,7 @@ public final class ResultSets {
      * @return A stream of data.
      * @param <T> The type of data in the stream.
      */
-    public static <T> Stream<T> getStream(ResultSet rs, ResultSetGetter<? extends T> getter) {
+    public static <T> Stream<T> stream(ResultSet rs, ResultSetGetter<? extends T> getter) {
         var iterator = new Iterator<T>() {
             Boolean hasNext = null;
             @Override
@@ -677,5 +694,28 @@ public final class ResultSets {
         };
         var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
         return StreamSupport.stream(spliterator, false);
+    }
+
+    /**
+     * Returns a stream where each element in the stream will be the same {@link ResultSet},
+     * but with {@link ResultSet#next()} called for each element such that each element will
+     * allow access to the returned rows.
+     *
+     * <p>
+     *     Assumes exclusive use of the {@link ResultSet} once passed.
+     *     The stream should be considered invalidated if the underlying {@link ResultSet}
+     *     or {@link java.sql.Connection} are closed.
+     * </p>
+     *
+     * <p>
+     * Any {@link SQLException}s will be wrapped as {@link UncheckedSQLException}s if they
+     * occur during stream operations.
+     * </p>
+     *
+     * @param rs The {@link ResultSet} to pull from.
+     * @return A stream of data.
+     */
+    public static Stream<ResultSet> stream(ResultSet rs) {
+        return stream(rs, x -> x);
     }
 }
