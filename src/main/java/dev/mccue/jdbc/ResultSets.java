@@ -656,7 +656,8 @@ public final class ResultSets {
      *
      * <p>
      *     As this depends on a {@link ResultSet}, the stream should be considered invalidated
-     *     if that {@link ResultSet} is closed. This will happen if you close t
+     *     if that {@link ResultSet} is closed. This will happen indirectly if you close the
+     *     {@link java.sql.PreparedStatement} or {@link java.sql.Connection}.
      * </p>
      *
      * <p>
