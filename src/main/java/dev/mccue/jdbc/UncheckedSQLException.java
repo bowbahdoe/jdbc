@@ -2,6 +2,7 @@ package dev.mccue.jdbc;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * Wraps a {@link SQLException} with an unchecked exception.
@@ -11,11 +12,11 @@ public class UncheckedSQLException extends RuntimeException {
     private static final long serialVersionUID = -8134305061645241065L;
 
     public UncheckedSQLException(String message, SQLException cause) {
-        super(message, cause);
+        super(message, Objects.requireNonNull(cause));
     }
 
     public UncheckedSQLException(SQLException cause) {
-        super(cause);
+        super(Objects.requireNonNull(cause));
     }
 
     @Override

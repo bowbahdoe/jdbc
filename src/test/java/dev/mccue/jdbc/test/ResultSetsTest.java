@@ -415,7 +415,7 @@ public class ResultSetsTest {
                         """)) {
 
                 var rs = stmt.executeQuery();
-                var record = ResultSets.getStream(
+                var record = ResultSets.stream(
                         rs,
                         ResultSets.getRecord(GetRecordListTestResult.class)
                 ).toList();
@@ -432,7 +432,7 @@ public class ResultSetsTest {
                         """)) {
 
                 var rs = stmt.executeQuery();
-                var record = ResultSets.getStream(
+                var record = ResultSets.stream(
                         rs,
                         ResultSets.getRecord(GetRecordListTestResult.class)
                 ).toList();

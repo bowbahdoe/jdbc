@@ -6,6 +6,7 @@ import java.lang.reflect.RecordComponent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -648,9 +649,14 @@ public final class ResultSets {
      * Pulls a stream of data from a {@link ResultSet}.
      *
      * <p>
-     *     Assumes exclusive use of the {@link ResultSet} once passed.
-     *     The stream should be considered invalidated if the underlying {@link ResultSet}
-     *     or {@link java.sql.Connection} are closed.
+     *     The stream returned from this method will call {@link ResultSet#next()}
+     *     internally. If you manually call {@link ResultSet#next()} externally
+     *     that will potentially lead to unexpected behavior.
+     * </p>
+     *
+     * <p>
+     *     As this depends on a {@link ResultSet}, the stream should be considered invalidated
+     *     if that {@link ResultSet} is closed. This will happen if you close t
      * </p>
      *
      * <p>
@@ -664,35 +670,36 @@ public final class ResultSets {
      * @param <T> The type of data in the stream.
      */
     public static <T> Stream<T> stream(ResultSet rs, ResultSetGetter<? extends T> getter) {
-        var iterator = new Iterator<T>() {
-            Boolean hasNext = null;
+        var spliterator =  new Spliterator<T>() {
             @Override
-            public boolean hasNext() {
+            public boolean tryAdvance(Consumer<? super T> action) {
                 try {
-                    if (hasNext == null) {
-                        hasNext = rs.next();
+                    if (rs.next()) {
+                        action.accept(getter.get(rs));
+                        return true;
+                    } else {
+                        return false;
                     }
-                    return hasNext;
                 } catch (SQLException e) {
                     throw new UncheckedSQLException(e);
                 }
             }
 
             @Override
-            public T next() {
-                try {
-                    if (!hasNext()) {
-                        throw new NoSuchElementException();
-                    }
-                    var result = getter.get(rs);
-                    hasNext = null;
-                    return result;
-                } catch (SQLException e) {
-                    throw new UncheckedSQLException(e);
-                }
+            public Spliterator<T> trySplit() {
+                return null;
+            }
+
+            @Override
+            public long estimateSize() {
+                return Long.MAX_VALUE;
+            }
+
+            @Override
+            public int characteristics() {
+                return Spliterator.ORDERED;
             }
         };
-        var spliterator = Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED);
         return StreamSupport.stream(spliterator, false);
     }
 

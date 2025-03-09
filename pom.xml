@@ -6,7 +6,7 @@
 
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>2025.03.08</version>
+    <version>2025.03.09</version>
     <packaging>jar</packaging>
 
     <properties>
