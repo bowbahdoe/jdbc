@@ -8,6 +8,7 @@ Includes
 * An `UncheckedSQLException` for when throwing a `SQLException` is inconvenient, but might need to be recovered later.
 * A `SQLFragment` class for basic query composition
 * A `SettableParameter` interface, useful with `SQLFragment` (but way more useful whenever String Templates are re-previewed).
+* A `ParameterizedSQLFragment` for producing `SQLFragments` using named
 
 ## Dependency Information
 
@@ -17,7 +18,7 @@ Includes
 <dependency>
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>2025.03.09</version>
+    <version>2025.05.27</version>
 </dependency>
 ```
 
@@ -26,7 +27,7 @@ Includes
 
 ```groovy
 dependencies {
-    implementation("dev.mccue:jdbc:2025.03.09")
+    implementation("dev.mccue:jdbc:2025.05.27")
 }
 ```
 

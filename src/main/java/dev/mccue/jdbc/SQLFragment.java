@@ -4,10 +4,7 @@ import org.intellij.lang.annotations.Language;
 import org.intellij.lang.annotations.MagicConstant;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents a fragment of SQL. Stores both the text of the sql fragment
@@ -19,7 +16,7 @@ public final class SQLFragment {
     private final List<Object> parameters;
 
     private SQLFragment(String sql, List<?> parameters) {
-        this.sql = sql;
+        this.sql = Objects.requireNonNull(sql);
         this.parameters = Collections.unmodifiableList(new ArrayList<>(parameters));
     }
 
@@ -164,5 +161,17 @@ public final class SQLFragment {
     @Override
     public String toString() {
         return "SQLFragment[sql=" + sql + ", parameters=" + parameters + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof SQLFragment fragment
+                && fragment.sql.equals(sql)
+                && Objects.equals(fragment.parameters, parameters);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sql, parameters);
     }
 }

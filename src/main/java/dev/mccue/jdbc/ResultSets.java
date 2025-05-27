@@ -3,6 +3,7 @@ package dev.mccue.jdbc;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.RecordComponent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -671,7 +672,7 @@ public final class ResultSets {
      * @param <T> The type of data in the stream.
      */
     public static <T> Stream<T> stream(ResultSet rs, ResultSetGetter<? extends T> getter) {
-        var spliterator =  new Spliterator<T>() {
+        var spliterator = new Spliterator<T>() {
             @Override
             public boolean tryAdvance(Consumer<? super T> action) {
                 try {

@@ -4,6 +4,7 @@ import dev.mccue.jdbc.SQLFragment;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,5 +43,17 @@ public class SQLFragmentTest {
 
         assertEquals(combinedFragment.sql(), "SELECT ?FROM ?WHERE ?");
         assertEquals(combinedFragment.parameters(), Arrays.asList("a", 1, 5, null, 6));
-    } 
+    }
+
+    @Test
+    public void equalsAndHashCode() {
+        assertEquals(SQLFragment.of("A", List.of()), SQLFragment.of("A", List.of()));
+        assertEquals(SQLFragment.of("A", List.of("B")), SQLFragment.of("A", List.of("B")));
+        assertEquals(SQLFragment.of("A", Arrays.asList("B", null)), SQLFragment.of("A", Arrays.asList("B", null)));
+
+
+        assertEquals(SQLFragment.of("A", List.of()).hashCode(), SQLFragment.of("A", List.of()).hashCode());
+        assertEquals(SQLFragment.of("A", List.of("B")).hashCode(), SQLFragment.of("A", List.of("B")).hashCode());
+        assertEquals(SQLFragment.of("A", Arrays.asList("B", null)).hashCode(), SQLFragment.of("A", Arrays.asList("B", null)).hashCode());
+    }
 }
