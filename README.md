@@ -8,7 +8,7 @@ Includes
 * An `UncheckedSQLException` for when throwing a `SQLException` is inconvenient, but might need to be recovered later.
 * A `SQLFragment` class for basic query composition
 * A `SettableParameter` interface, useful with `SQLFragment` (but way more useful whenever String Templates are re-previewed).
-* A `ParameterizedSQLFragment` for producing `SQLFragments` using named
+* A `ParameterizedSQLFragment` for producing `SQLFragments` using named arguments
 
 ## Dependency Information
 
@@ -377,6 +377,47 @@ void main() throws Exception {
 }
 ```
 
+### Compose fragments of SQL using named arguments
+
+You can use `ParameterizedSQLFragment` to pass named instead of positional arguments to make SQLFragments.
+
+```java
+import dev.mccue.jdbc.ParameterizedSQLFragment;
+import dev.mccue.jdbc.ResultSets;
+import dev.mccue.jdbc.SQLFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    var queryFragments = new ArrayList<SQLFragment>();
+    queryFragments.add(ParameterizedSQLFragment.of("""
+            SELECT name
+            FROM widget
+            WHERE id = :id
+            """, Map.of("id", 1)));
+
+    Integer limit = Math.random() > 0.5 ? null : 1;
+    if (limit != null) {
+        queryFragments.add(ParameterizedSQLFragment.of("""
+                LIMIT :limit
+                """, Map.of("limit", limit)));
+    }
+
+    var query = SQLFragment.join("", queryFragments);
+
+    try (var conn = db.getConnection()) {
+        try (var stmt = query.prepareStatement(conn)) {
+            var rs = stmt.executeQuery();
+            Integer number = ResultSets.getIntegerNullable(rs, "number");
+            System.out.println(number);
+        }
+    }
+}
+```
 <!--
 ### Read a row as a `Record`, customizing how a column is gotten from a `ResultSet`.
 
