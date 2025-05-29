@@ -47,24 +47,17 @@ public final class ParameterizedSQLFragment
             String sql,
             Map<String, ?> params
     ) {
-        var matcher = REPLACE_PATTERN.matcher(sql);
-
-        var offset = 0;
-        var builder = new StringBuilder();
         var values = new ArrayList<>();
-        while (matcher.find()) {
-            var group = matcher.group(1);
+        var replacedSQL = REPLACE_PATTERN.matcher(sql).replaceAll(matchResult -> {
+            var group = matchResult.group(1);
             if (!params.containsKey(group)) {
                 throw new IllegalArgumentException("No value for :" + group);
             }
             values.add(params.get(group));
-            builder.append(sql, offset, matcher.start());
-            builder.append('?');
-            offset = matcher.end();
-        }
-        return SQLFragment.of(builder
-                .append(sql, offset, sql.length())
-                .toString(), values);
+            return "?";
+        });
+
+        return SQLFragment.of(replacedSQL, values);
     }
 
     @Override

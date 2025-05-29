@@ -31,11 +31,17 @@ public interface SettableParameter {
 
     /**
      * @see PreparedStatement#setBoolean(int, boolean)
-     * @param x The value to set.
+     * @param value The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofBoolean(boolean x) {
-        return (stmt, parameterIndex) -> stmt.setBoolean(parameterIndex, x);
+    static SettableParameter ofBoolean(boolean value) {
+        record OfBoolean(boolean value) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBoolean(parameterIndex, value);
+            }
+        }
+        return new OfBoolean(value);
     }
 
     /**
@@ -44,7 +50,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofByte(byte x) {
-        return (stmt, parameterIndex) -> stmt.setByte(parameterIndex, x);
+        record OfByte(byte x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setByte(parameterIndex, x);
+            }
+        }
+        return new OfByte(x);
     }
 
     /**
@@ -53,7 +65,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofShort(short x) {
-        return (stmt, parameterIndex) -> stmt.setShort(parameterIndex, x);
+        record OfShort(short x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setShort(parameterIndex, x);
+            }
+        }
+        return new OfShort(x);
     }
 
     /**
@@ -62,7 +80,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofInt(int x) {
-        return (stmt, parameterIndex) -> stmt.setInt(parameterIndex, x);
+        record OfInt(int x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setInt(parameterIndex, x);
+            }
+        }
+        return new OfInt(x);
     }
 
     /**
@@ -71,7 +95,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofLong(long x) {
-        return (stmt, parameterIndex) -> stmt.setLong(parameterIndex, x);
+        record OfLong(long x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setLong(parameterIndex, x);
+            }
+        }
+        return new OfLong(x);
     }
 
     /**
@@ -80,7 +110,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofFloat(float x) {
-        return (stmt, parameterIndex) -> stmt.setFloat(parameterIndex, x);
+        record OfFloat(float x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setFloat(parameterIndex, x);
+            }
+        }
+        return new OfFloat(x);
     }
 
     /**
@@ -89,91 +125,152 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofDouble(double x) {
-        return (stmt, parameterIndex) -> stmt.setDouble(parameterIndex, x);
+        record OfDouble(double x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setDouble(parameterIndex, x);
+            }
+        }
+        return new OfDouble(x);
     }
 
     /**
      * @see PreparedStatement#setURL(int, URL)
-     * @param url The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofURL(URL url) {
-        return (stmt, parameterIndex) -> stmt.setURL(parameterIndex, url);
+    static SettableParameter ofURL(URL x) {
+        record OfURL(URL x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setURL(parameterIndex, x);
+            }
+        }
+        return new OfURL(x);
     }
 
     /**
      * @see PreparedStatement#setArray(int, Array)
-     * @param array The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofArray(Array array) {
-        return (stmt, parameterIndex) -> stmt.setArray(parameterIndex, array);
+    static SettableParameter ofArray(Array x) {
+        record OfArray(Array x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setArray(parameterIndex, x);
+            }
+        }
+        return new OfArray(x);
     }
 
     /**
      * @see PreparedStatement#setTime(int, Time)
-     * @param time The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofTime(Time time) {
-        return (stmt, parameterIndex) -> stmt.setTime(parameterIndex, time);
+    static SettableParameter ofTime(Time x) {
+        record OfTime(Time x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setTime(parameterIndex, x);
+            }
+        }
+        return new OfTime(x);
     }
 
     /**
      * @see PreparedStatement#setTime(int, Time, Calendar)
-     * @param time The value to set.
-     * @param calendar The calendar the driver will use.
+     * @param x The value to set.
+     * @param cal The calendar the driver will use.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofTime(Time time, Calendar calendar) {
-        return (stmt, parameterIndex) -> stmt.setTime(parameterIndex, time, calendar);
+    static SettableParameter ofTime(Time x, Calendar cal) {
+        record OfTime(Time x, Calendar cal) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setTime(parameterIndex, x, cal);
+            }
+        }
+        return new OfTime(x, cal);
     }
 
     /**
      * @see PreparedStatement#setDate(int, Date)
-     * @param date The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofDate(Date date) {
-        return (stmt, parameterIndex) -> stmt.setDate(parameterIndex, date);
+    static SettableParameter ofDate(Date x) {
+        record OfDate(Date x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setDate(parameterIndex, x);
+            }
+        }
+        return new OfDate(x);
     }
 
     /**
      * @see PreparedStatement#setDate(int, Date, Calendar)
-     * @param date The value to set.
+     * @param x The value to set.
+     * @param cal The calendar the driver will use.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofDate(Date date, Calendar calendar) {
-        return (stmt, parameterIndex) -> stmt.setDate(parameterIndex, date, calendar);
+    static SettableParameter ofDate(Date x, Calendar cal) {
+        record OfDate(Date x, Calendar cal) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setDate(parameterIndex, x, cal);
+            }
+        }
+        return new OfDate(x, cal);
     }
 
     /**
      * @see PreparedStatement#setBinaryStream(int, InputStream)
-     * @param inputStream The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofBinaryStream(InputStream inputStream) {
-        return (stmt, parameterIndex) -> stmt.setBinaryStream(parameterIndex, inputStream);
+    static SettableParameter ofBinaryStream(InputStream x) {
+        record OfBinaryStream(InputStream x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBinaryStream(parameterIndex, x);
+            }
+        }
+        return new OfBinaryStream(x);
     }
 
     /**
      * @see PreparedStatement#setBinaryStream(int, InputStream, int)
-     * @param inputStream The value to set.
+     * @param x The value to set.
      * @param length The length of the binary stream.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofBinaryStream(InputStream inputStream, int length) {
-        return (stmt, parameterIndex) -> stmt.setBinaryStream(parameterIndex, inputStream, length);
+    static SettableParameter ofBinaryStream(InputStream x, int length) {
+        record OfBinaryStream(InputStream x, int length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBinaryStream(parameterIndex, x, length);
+            }
+        }
+        return new OfBinaryStream(x, length);
     }
 
     /**
      * @see PreparedStatement#setBinaryStream(int, InputStream, long)
-     * @param inputStream The value to set.
+     * @param x The value to set.
      * @param length The length of the binary stream.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofBinaryStream(InputStream inputStream, long length) {
-        return (stmt, parameterIndex) -> stmt.setBinaryStream(parameterIndex, inputStream, length);
+    static SettableParameter ofBinaryStream(InputStream x, long length) {
+        record OfBinaryStream(InputStream x, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBinaryStream(parameterIndex, x, length);
+            }
+        }
+        return new OfBinaryStream(x, length);
     }
 
     /**
@@ -182,7 +279,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofCharacterStream(Reader reader) {
-        return (stmt, parameterIndex) -> stmt.setCharacterStream(parameterIndex, reader);
+        record OfCharacterStream(Reader reader) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setCharacterStream(parameterIndex, reader);
+            }
+        }
+        return new OfCharacterStream(reader);
     }
 
     /**
@@ -192,7 +295,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofCharacterStream(Reader reader, int length) {
-        return (stmt, parameterIndex) -> stmt.setCharacterStream(parameterIndex, reader, length);
+        record OfCharacterStream(Reader reader, int length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setCharacterStream(parameterIndex, reader, length);
+            }
+        }
+        return new OfCharacterStream(reader, length);
     }
 
     /**
@@ -202,7 +311,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofCharacterStream(Reader reader, long length) {
-        return (stmt, parameterIndex) -> stmt.setCharacterStream(parameterIndex, reader, length);
+        record OfCharacterStream(Reader reader, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setCharacterStream(parameterIndex, reader, length);
+            }
+        }
+        return new OfCharacterStream(reader, length);
     }
 
     /**
@@ -211,7 +326,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNCharacterStream(Reader reader) {
-        return (stmt, parameterIndex) -> stmt.setNCharacterStream(parameterIndex, reader);
+        record OfNCharacterStream(Reader reader) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNCharacterStream(parameterIndex, reader);
+            }
+        }
+        return new OfNCharacterStream(reader);
     }
 
     /**
@@ -221,7 +342,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNCharacterStream(Reader reader, long length) {
-        return (stmt, parameterIndex) -> stmt.setNCharacterStream(parameterIndex, reader, length);
+        record OfNCharacterStream(Reader reader, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNCharacterStream(parameterIndex, reader, length);
+            }
+        }
+        return new OfNCharacterStream(reader, length);
     }
 
     /**
@@ -230,7 +357,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNull(int sqlType) {
-        return (stmt, parameterIndex) -> stmt.setNull(parameterIndex, sqlType);
+        record OfNull(int sqlType) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNull(parameterIndex, sqlType);
+            }
+        }
+        return new OfNull(sqlType);
     }
 
     /**
@@ -241,7 +374,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNull(int sqlType, String typeName) {
-        return (stmt, parameterIndex) -> stmt.setNull(parameterIndex, sqlType, typeName);
+        record OfNull(int sqlType, String typeName) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNull(parameterIndex, sqlType, typeName);
+            }
+        }
+        return new OfNull(sqlType, typeName);
     }
 
     /**
@@ -250,7 +389,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofBigDecimal(BigDecimal x) {
-        return (stmt, parameterIndex) -> stmt.setBigDecimal(parameterIndex, x);
+        record OfBigDecimal(BigDecimal x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBigDecimal(parameterIndex, x);
+            }
+        }
+        return new OfBigDecimal(x);
     }
 
     /**
@@ -259,7 +404,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofString(String x) {
-        return (stmt, parameterIndex) -> stmt.setString(parameterIndex, x);
+        record OfString(String x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setString(parameterIndex, x);
+            }
+        }
+        return new OfString(x);
     }
 
     /**
@@ -268,79 +419,127 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofBytes(byte[] x) {
-        return (stmt, parameterIndex) -> stmt.setBytes(parameterIndex, x);
+        record OfBytes(byte[] x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBytes(parameterIndex, x);
+            }
+        }
+        return new OfBytes(x);
     }
 
     /**
      * @see PreparedStatement#setTimestamp(int, Timestamp)
-     * @param timestamp The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofTimestamp(Timestamp timestamp) {
-        return (stmt, parameterIndex) -> stmt.setTimestamp(parameterIndex, timestamp);
+    static SettableParameter ofTimestamp(Timestamp x) {
+        record OfTimestamp(Timestamp x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setTimestamp(parameterIndex, x);
+            }
+        }
+        return new OfTimestamp(x);
     }
 
     /**
      * @see PreparedStatement#setTimestamp(int, Timestamp, Calendar)
-     * @param timestamp The value to set.
-     * @param calendar The calendar the driver will use.
+     * @param x The value to set.
+     * @param cal The calendar the driver will use.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofTimestamp(Timestamp timestamp, Calendar calendar) {
-        return (stmt, parameterIndex) -> stmt.setTimestamp(parameterIndex, timestamp, calendar);
+    static SettableParameter ofTimestamp(Timestamp x, Calendar cal) {
+        record OfTimestamp(Timestamp x, Calendar cal) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setTimestamp(parameterIndex, x, cal);
+            }
+        }
+        return new OfTimestamp(x, cal);
     }
 
     /**
      * @see PreparedStatement#setAsciiStream(int, InputStream)
-     * @param inputStream The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofAsciiStream(InputStream inputStream) {
-        return (stmt, parameterIndex) -> stmt.setAsciiStream(parameterIndex, inputStream);
+    static SettableParameter ofAsciiStream(InputStream x) {
+        record OfAsciiStream(InputStream x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setAsciiStream(parameterIndex, x);
+            }
+        }
+        return new OfAsciiStream(x);
     }
 
     /**
      * @see PreparedStatement#setAsciiStream(int, InputStream, int)
-     * @param inputStream The value to set.
+     * @param x The value to set.
      * @param length The length of the ascii stream.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofAsciiStream(InputStream inputStream, int length) {
-        return (stmt, parameterIndex) -> stmt.setAsciiStream(parameterIndex, inputStream, length);
+    static SettableParameter ofAsciiStream(InputStream x, int length) {
+        record OfAsciiStream(InputStream x, int length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setAsciiStream(parameterIndex, x, length);
+            }
+        }
+        return new OfAsciiStream(x, length);
     }
 
     /**
      * @see PreparedStatement#setAsciiStream(int, InputStream, long)
-     * @param inputStream The value to set.
+     * @param x The value to set.
      * @param length The length of the ascii stream.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofAsciiStream(InputStream inputStream, long length) {
-        return (stmt, parameterIndex) -> stmt.setAsciiStream(parameterIndex, inputStream, length);
+    static SettableParameter ofAsciiStream(InputStream x, long length) {
+        record OfAsciiStream(InputStream x, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setAsciiStream(parameterIndex, x, length);
+            }
+        }
+        return new OfAsciiStream(x, length);
     }
 
     /**
      * @see PreparedStatement#setObject(int, Object)
-     * @param object The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object) {
-        return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object);
+    static SettableParameter ofObject(Object x) {
+        record OfObject(Object x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setObject(parameterIndex, x);
+            }
+        }
+        return new OfObject(x);
     }
 
     /**
      * @see PreparedStatement#setObject(int, Object)
-     * @param object The value to set.
+     * @param x The value to set.
      * @param targetSqlType The SQL type code defined in {@code java.sql.Types}.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object, @MagicConstant(valuesFromClass = Types.class) int targetSqlType) {
-        return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object, targetSqlType);
+    static SettableParameter ofObject(Object x, @MagicConstant(valuesFromClass = Types.class) int targetSqlType) {
+        record OfObject(Object x, int targetSqlType) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setObject(parameterIndex, x, targetSqlType);
+            }
+        }
+        return new OfObject(x, targetSqlType);
     }
 
     /**
      * @see PreparedStatement#setObject(int, Object)
-     * @param object The value to set.
+     * @param x The value to set.
      * @param targetSqlType The SQL type code defined in {@code java.sql.Types}.
      * @param scaleOrLength for {@code java.sql.Types.DECIMAL}
      *                or {@code java.sql.Types.NUMERIC types},
@@ -351,8 +550,14 @@ public interface SettableParameter {
      *                this value will be ignored.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object, @MagicConstant(valuesFromClass = Types.class) int targetSqlType, int scaleOrLength) {
-        return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object, targetSqlType, scaleOrLength);
+    static SettableParameter ofObject(Object x, @MagicConstant(valuesFromClass = Types.class) int targetSqlType, int scaleOrLength) {
+        record OfObject(Object x, int targetSqlType, int scaleOrLength) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
+            }
+        }
+        return new OfObject(x, targetSqlType, scaleOrLength);
     }
 
     /**
@@ -362,13 +567,19 @@ public interface SettableParameter {
      *                      scale argument may further qualify this type.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object, SQLType targetSqlType) {
-        return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object, targetSqlType);
+    static SettableParameter ofObject(Object x, SQLType targetSqlType) {
+        record OfObject(Object x, SQLType targetSqlType) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setObject(parameterIndex, x, targetSqlType);
+            }
+        }
+        return new OfObject(x, targetSqlType);
     }
 
     /**
      * @see PreparedStatement#setObject(int, Object)
-     * @param object The value to set.
+     * @param x The value to set.
      * @param targetSqlType the SQL type to be sent to the database. The
      *                      scale argument may further qualify this type.
      * @param scaleOrLength for {@code java.sql.Types.DECIMAL}
@@ -380,17 +591,29 @@ public interface SettableParameter {
      *                this value will be ignored.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofObject(Object object, SQLType targetSqlType, int scaleOrLength) {
-        return (stmt, parameterIndex) -> stmt.setObject(parameterIndex, object, targetSqlType, scaleOrLength);
+    static SettableParameter ofObject(Object x, SQLType targetSqlType, int scaleOrLength) {
+        record OfObject(Object x, SQLType targetSqlType, int scaleOrLength) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
+            }
+        }
+        return new OfObject(x, targetSqlType, scaleOrLength);
     }
 
     /**
      * @see PreparedStatement#setBlob(int, Blob)
-     * @param blob The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofBlob(Blob blob) {
-        return (stmt, parameterIndex) -> stmt.setBlob(parameterIndex, blob);
+    static SettableParameter ofBlob(Blob x) {
+        record OfBlob(Blob x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBlob(parameterIndex, x);
+            }
+        }
+        return new OfBlob(x);
     }
 
     /**
@@ -399,7 +622,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofBlob(InputStream inputStream) {
-        return (stmt, parameterIndex) -> stmt.setBlob(parameterIndex, inputStream);
+        record OfBlob(InputStream inputStream) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBlob(parameterIndex, inputStream);
+            }
+        }
+        return new OfBlob(inputStream);
     }
 
     /**
@@ -409,44 +638,74 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofBlob(InputStream inputStream, long length) {
-        return (stmt, parameterIndex) -> stmt.setBlob(parameterIndex, inputStream, length);
+        record OfBlob(InputStream inputStream, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setBlob(parameterIndex, inputStream, length);
+            }
+        }
+        return new OfBlob(inputStream, length);
     }
 
     /**
-     * @see PreparedStatement#setBlob(int, Blob)
-     * @param clob The value to set.
+     * @see PreparedStatement#setClob(int, Clob)
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofClob(Clob clob) {
-        return (stmt, parameterIndex) -> stmt.setClob(parameterIndex, clob);
+    static SettableParameter ofClob(Clob x) {
+        record OfClob(Clob x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setClob(parameterIndex, x);
+            }
+        }
+        return new OfClob(x);
     }
 
     /**
-     * @see PreparedStatement#setBlob(int, Blob)
+     * @see PreparedStatement#setClob(int, Reader)
      * @param reader The value to set.
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofClob(Reader reader) {
-        return (stmt, parameterIndex) -> stmt.setClob(parameterIndex, reader);
+        record OfClob(Reader reader) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setClob(parameterIndex, reader);
+            }
+        }
+        return new OfClob(reader);
     }
 
     /**
-     * @see PreparedStatement#setBlob(int, Blob)
+     * @see PreparedStatement#setClob(int, Reader, long)
      * @param reader The value to set.
      * @param length The length of the clob.
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofClob(Reader reader, long length) {
-        return (stmt, parameterIndex) -> stmt.setClob(parameterIndex, reader, length);
+        record OfClob(Reader reader, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setClob(parameterIndex, reader, length);
+            }
+        }
+        return new OfClob(reader, length);
     }
 
     /**
      * @see PreparedStatement#setRowId(int, RowId)
-     * @param rowId The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofRowId(RowId rowId) {
-        return (stmt, parameterIndex) -> stmt.setRowId(parameterIndex, rowId);
+    static SettableParameter ofRowId(RowId x) {
+        record OfRowId(RowId x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setRowId(parameterIndex, x);
+            }
+        }
+        return new OfRowId(x);
     }
 
     /**
@@ -455,7 +714,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNString(String value) {
-        return (stmt, parameterIndex) -> stmt.setNString(parameterIndex, value);
+        record OfNString(String value) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNString(parameterIndex, value);
+            }
+        }
+        return new OfNString(value);
     }
 
     /**
@@ -464,7 +729,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNClob(NClob value) {
-        return (stmt, parameterIndex) -> stmt.setNClob(parameterIndex, value);
+        record OfNClob(NClob value) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNClob(parameterIndex, value);
+            }
+        }
+        return new OfNClob(value);
     }
 
     /**
@@ -473,7 +744,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNClob(Reader reader) {
-        return (stmt, parameterIndex) -> stmt.setNClob(parameterIndex, reader);
+        record OfNClob(Reader reader) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNClob(parameterIndex, reader);
+            }
+        }
+        return new OfNClob(reader);
     }
 
     /**
@@ -483,7 +760,13 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofNClob(Reader reader, long length) {
-        return (stmt, parameterIndex) -> stmt.setNClob(parameterIndex, reader, length);
+        record OfNClob(Reader reader, long length) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setNClob(parameterIndex, reader, length);
+            }
+        }
+        return new OfNClob(reader, length);
     }
 
     /**
@@ -492,16 +775,28 @@ public interface SettableParameter {
      * @return A {@link SettableParameter}.
      */
     static SettableParameter ofSQLXML(SQLXML xmlObject) {
-        return (stmt, parameterIndex) -> stmt.setSQLXML(parameterIndex, xmlObject);
+        record OfSQLXML(SQLXML xmlObject) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setSQLXML(parameterIndex, xmlObject);
+            }
+        }
+        return new OfSQLXML(xmlObject);
     }
 
     /**
      * @see PreparedStatement#setRef(int, Ref)
-     * @param ref The value to set.
+     * @param x The value to set.
      * @return A {@link SettableParameter}.
      */
-    static SettableParameter ofRef(Ref ref) {
-        return (stmt, parameterIndex) -> stmt.setRef(parameterIndex, ref);
+    static SettableParameter ofRef(Ref x) {
+        record OfRef(Ref x) implements SettableParameter {
+            @Override
+            public void setParameter(PreparedStatement stmt, int parameterIndex) throws SQLException {
+                stmt.setRef(parameterIndex, x);
+            }
+        }
+        return new OfRef(x);
     }
 
 
