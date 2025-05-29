@@ -562,7 +562,7 @@ public interface SettableParameter {
 
     /**
      * @see PreparedStatement#setObject(int, Object)
-     * @param object The value to set.
+     * @param x The value to set.
      * @param targetSqlType the SQL type to be sent to the database. The
      *                      scale argument may further qualify this type.
      * @return A {@link SettableParameter}.
