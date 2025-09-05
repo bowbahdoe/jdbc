@@ -43,14 +43,11 @@ public final class SQLFragment {
      * @return A {@link SQLFragment}.
      */
     public static SQLFragment ofPlaceholders(List<?> parameters) {
-        var placeholders = new StringBuilder();
+        var sj = new StringJoiner(",");
         for (int i = 0; i < parameters.size(); i++) {
-            placeholders.append("?");
-            if (i != parameters.size() - 1) {
-                placeholders.append(",");
-            }
+            sj.add("?");
         }
-        return SQLFragment.of(placeholders.toString(), parameters);
+        return SQLFragment.of(sj.toString(), parameters);
     }
 
     public SQLFragment concat(SQLFragment other) {
