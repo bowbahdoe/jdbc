@@ -2,6 +2,7 @@ package dev.mccue.jdbc.test;
 
 import dev.mccue.jdbc.ParameterizedSQLFragment;
 import dev.mccue.jdbc.SQLFragment;
+import dev.mccue.jdbc.SettableParameter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -84,6 +85,39 @@ public class ParameterizedSQLFragmentTest {
                         FROM stuff
                         WHERE a = :a-b AND b = :c_d AND c = :0 AND something
                         """).hashCode()
+        );
+    }
+
+    @Test
+    public void testNestedSQLFragment() {
+        assertEquals(
+                ParameterizedSQLFragment.of(
+                        "SELECT * FROM stuff :where_clause AND 1 = 1",
+                        Map.of(
+                                "where_clause", SQLFragment.of("WHERE num > ?", List.of(SettableParameter.ofInt(5)))
+                        )
+                ),
+                SQLFragment.of(
+                        "SELECT * FROM stuff WHERE num > ? AND 1 = 1",
+                        List.of(SettableParameter.ofInt(5))
+                )
+        );
+    }
+
+    @Test
+    public void testNestedParameterizedSQLFragment() {
+        assertEquals(
+                ParameterizedSQLFragment.of(
+                        "SELECT * FROM stuff :where_clause AND 1 = 1",
+                        Map.of(
+                                "where_clause", ParameterizedSQLFragment.of("WHERE num > :num"),
+                                "num", SettableParameter.ofInt(5)
+                        )
+                ),
+                SQLFragment.of(
+                        "SELECT * FROM stuff WHERE num > ? AND 1 = 1",
+                        List.of(SettableParameter.ofInt(5))
+                )
         );
     }
 }

@@ -53,8 +53,19 @@ public final class ParameterizedSQLFragment
             if (!params.containsKey(group)) {
                 throw new IllegalArgumentException("No value for :" + group);
             }
-            values.add(params.get(group));
-            return "?";
+            var value = params.get(group);
+            if (value instanceof ParameterizedSQLFragment parameterizedSQLFragment) {
+                value = parameterizedSQLFragment.apply(params);
+            }
+
+            if (value instanceof SQLFragment fragment) {
+                values.addAll(fragment.parameters());
+                return fragment.sql();
+            }
+            else {
+                values.add(params.get(group));
+                return "?";
+            }
         });
 
         return SQLFragment.of(replacedSQL, values);
