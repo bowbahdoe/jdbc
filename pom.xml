@@ -149,7 +149,6 @@
                                 <signing>
                                     <active>ALWAYS</active>
                                     <armored>true</armored>
-                                    <verify>false</verify>
                                 </signing>
                                 <deploy>
                                     <maven>

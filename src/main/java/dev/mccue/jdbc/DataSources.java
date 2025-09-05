@@ -39,26 +39,6 @@ public final class DataSources {
 
     public static <T> T transact(
             DataSource dataSource,
-            TransactionOptions options,
-            SQLSupplier<? extends T> bodyFunction
-    ) throws SQLException {
-        return transact(dataSource, options, (SQLFunction<? super Connection, T>) (c) -> bodyFunction.get() );
-    }
-
-    public static void transact(
-            DataSource dataSource,
-            TransactionOptions options,
-            SQLRunnable bodyFunction
-    ) throws SQLException {
-        transact(
-                dataSource,
-                options,
-                (SQLConsumer<? super Connection>) (c) -> bodyFunction.run()
-        );
-    }
-
-    public static <T> T transact(
-            DataSource dataSource,
             SQLFunction<? super Connection, ? extends T> bodyFunction
     ) throws SQLException {
         return transact(
@@ -78,25 +58,4 @@ public final class DataSources {
         );
     }
 
-    public static <T> T transact(
-            DataSource dataSource,
-            SQLSupplier<? extends T> bodyFunction
-    ) throws SQLException {
-        return transact(
-                dataSource,
-                TransactionOptions.DEFAULT,
-                bodyFunction
-        );
-    }
-
-    public static void transact(
-            DataSource dataSource,
-            SQLRunnable bodyFunction
-    ) throws SQLException {
-        transact(
-                dataSource,
-                TransactionOptions.DEFAULT,
-                bodyFunction
-        );
-    }
 }
