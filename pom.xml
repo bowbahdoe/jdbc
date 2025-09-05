@@ -139,11 +139,11 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>1.19.0</version>
+                        <version>1.20.0</version>
                         <configuration>
                             <jreleaser>
                                 <project>
-                                    <copyright>2024</copyright>
+                                    <copyright>2025</copyright>
                                     <versionPattern><type>CHRONVER</type></versionPattern>
                                 </project>
                                 <signing>
