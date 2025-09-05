@@ -10,7 +10,7 @@ import java.util.Objects;
 /// An {@link IOException} caused by a {@link SQLException}
 public class SQLIOException extends IOException {
     @Serial
-    private static final long serialVersionUID = 9;
+    private static final long serialVersionUID = 1;
 
     public SQLIOException(String message, SQLException cause) {
         super(message, Objects.requireNonNull(cause));
