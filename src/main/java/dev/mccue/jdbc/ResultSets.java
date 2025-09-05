@@ -3,11 +3,11 @@ package dev.mccue.jdbc;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.RecordComponent;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -615,12 +615,18 @@ public final class ResultSets {
     /**
      * Pulls a list of data from a {@link ResultSet}.
      *
+     * <p>
+     *     Deprecated because of unideal naming. Use {@link ResultSets#stream(ResultSet, ResultSetGetter)}
+     *     and collect to a list instead.
+     * </p>
+     *
      * @param rs The {@link ResultSet} to pull from.
      * @param getter Called to get each item of the list.
      * @return A list of data.
      * @param <T> The type of data in the list.
      * @throws SQLException If something goes wrong.
      */
+    @Deprecated
     public static <T> List<T> getList(ResultSet rs, ResultSetGetter<? extends T> getter) throws SQLException {
         var items = new ArrayList<T>();
         while (rs.next()) {
