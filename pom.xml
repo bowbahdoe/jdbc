@@ -6,7 +6,7 @@
 
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
-    <version>2025.05.29</version>
+    <version>2025.09.04</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -152,15 +152,13 @@
                                 </signing>
                                 <deploy>
                                     <maven>
-                                        <nexus2>
-                                            <maven-central>
-                                                <active>ALWAYS</active>
-                                                <url>https://s01.oss.sonatype.org/service/local</url>;
-                                                <closeRepository>true</closeRepository>
-                                                <releaseRepository>true</releaseRepository>
+                                        <mavenCentral>
+                                            <release-deploy>
+                                                <active>RELEASE</active>
+                                                <url>https://central.sonatype.com/api/v1/publisher</url>
                                                 <stagingRepositories>target/staging-deploy</stagingRepositories>
-                                            </maven-central>
-                                        </nexus2>
+                                            </release-deploy>
+                                        </mavenCentral>
                                     </maven>
                                 </deploy>
                             </jreleaser>
