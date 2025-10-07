@@ -1,13 +1,14 @@
 # JDBC
 
-Utilities for working with the raw JDBC api. 
+Utilities for working with the raw JDBC api.
 
 Includes
 
 * Utilities for reading data from `ResultSet`s
 * An `UncheckedSQLException` for when throwing a `SQLException` is inconvenient, but might need to be recovered later.
 * A `SQLFragment` class for basic query composition
-* A `SettableParameter` interface, useful with `SQLFragment` (but way more useful whenever String Templates are re-previewed).
+* A `SettableParameter` interface, useful with `SQLFragment` (but way more useful whenever String Templates are
+  re-previewed).
 * A `ParameterizedSQLFragment` for producing `SQLFragments` using named arguments
 
 ## Dependency Information
@@ -15,13 +16,13 @@ Includes
 ### Maven
 
 ```xml
+
 <dependency>
     <groupId>dev.mccue</groupId>
     <artifactId>jdbc</artifactId>
     <version>2025.10.07</version>
 </dependency>
 ```
-
 
 ### Gradle
 
@@ -31,10 +32,9 @@ dependencies {
 }
 ```
 
-
 ## Usage
 
-These examples use [sqlite](https://central.sonatype.com/artifact/org.xerial/sqlite-jdbc). 
+These examples use [sqlite](https://central.sonatype.com/artifact/org.xerial/sqlite-jdbc).
 
 <!--
 
@@ -210,7 +210,8 @@ Often when going through a `ResultSet` you will want to materialize a whole row.
 ```java
 import dev.mccue.jdbc.ResultSets;
 
-public record Widget(int number) {}
+public record Widget(int number) {
+}
 
 void main() throws Exception {
     var db = new SQLiteDataSource();
@@ -230,7 +231,6 @@ void main() throws Exception {
     }
 }
 ```
-
 
 ### Read a row as a `Record` with customized mappings
 
@@ -297,7 +297,6 @@ void main() throws Exception {
 
 You can use `SQLFragment` to implement some relatively basic conditional query building logic.
 
-
 ```java
 import dev.mccue.jdbc.ResultSets;
 import dev.mccue.jdbc.SQLFragment;
@@ -315,16 +314,16 @@ void main() throws Exception {
             FROM widget
             WHERE id = ?
             """, List.of(1)));
-    
+
     Integer limit = Math.random() > 0.5 ? null : 1;
     if (limit != null) {
         queryFragments.add(SQLFragment.of("""
                 LIMIT ?
                 """, List.of(limit)));
     }
-    
+
     var query = SQLFragment.join("", queryFragments);
-    
+
     try (var conn = db.getConnection()) {
         try (var stmt = query.prepareStatement(conn)) {
             var rs = stmt.executeQuery();
@@ -418,6 +417,92 @@ void main() throws Exception {
     }
 }
 ```
+
+### Run code in a transaction, rolling back on failures
+
+```java
+import dev.mccue.jdbc.DataSources;
+import dev.mccue.jdbc.ParameterizedSQLFragment;
+import dev.mccue.jdbc.ResultSets;
+import dev.mccue.jdbc.SQLFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+void main() throws Exception {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    DataSources.transact(db, conn -> {
+        try (var stmt = SQLFragment.of(
+                "INSERT INTO widget(name) VALUES (?)",
+                "bob"
+        ).prepareStatement(conn)) {
+            stmt.execute();
+        }
+
+        try (var stmt = SQLFragment.of(
+                "INSERT INTO widget(name) VALUES (?)",
+                "susan"
+        ).prepareStatement(conn)) {
+            stmt.execute();
+        }
+
+        throw new RuntimeException("Will rollback");
+    });
+}
+```
+
+### Wrap a SQLException as an IOException
+
+```java
+import dev.mccue.jdbc.SQLIOException;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.SQLException;
+
+void performTask(DataSource db) throws IOException {
+    try {
+        db.getConnection();
+    } catch (SQLException e) {
+        throw new SQLIOException(e);
+    }
+}
+
+void main() throws IOException {
+    var db = new SQLiteDataSource();
+    db.setUrl("jdbc:sqlite:test.db");
+
+    performTask(db);
+}
+```
+
+### Wrap an IOException as a SQLException
+
+```java
+import dev.mccue.jdbc.IOSQLException;
+import dev.mccue.jdbc.SQLIOException;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+
+void readFile() throws SQLException {
+    try {
+        Files.readString(Path.of("test.txt"));
+    } catch (IOException e) {
+        throw new IOSQLException(e);
+    }
+}
+
+void main() throws SQLException {
+    readFile();
+}
+```
+
 <!--
 ### Read a row as a `Record`, customizing how a column is gotten from a `ResultSet`.
 
